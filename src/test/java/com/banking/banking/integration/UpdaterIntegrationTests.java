@@ -3,6 +3,7 @@ package com.banking.banking.integration;
 import com.banking.banking.model.Statistics;
 import com.banking.banking.model.Transaction;
 import com.banking.banking.statistics.TransactionServiceImpl;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,15 @@ public class UpdaterIntegrationTests {
     private TransactionServiceImpl transactionServiceImpl;
 
     /**
+     * flushing the statistics before each test
+     * to clear all fields.
+     */
+    @Before
+    public void flushStatistics() {
+        transactionServiceImpl.resetStatistics();
+    }
+
+    /**
      * successfully register two transactions:
      * 1- one is valid for 60 seconds
      * 2- the other is valid for 5 seconds only ( to make this test faster so it doesn't have to wait 60 seconds )
@@ -49,7 +59,7 @@ public class UpdaterIntegrationTests {
 
         long countBefore = transactionServiceImpl.getStatistics().getCount();
 //      waiting to for the transaction 2 to be deleted
-        TimeUnit.SECONDS.sleep(6);
+        TimeUnit.SECONDS.sleep(9);
         Statistics statistics = transactionServiceImpl.getStatistics();
         double amount = NEW_TRANSACTION_MIN_AMOUNT.getAmount();
         long countAfter = statistics.getCount();
